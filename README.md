@@ -1,3 +1,4 @@
+
 # Nouveau projet serveur
 
 ## Contexte
@@ -15,3 +16,4 @@ Avant le déploiement, les étapes suivantes ont été réalisées :
 - Ajout du code applicatif et des fichiers de configuration
 - Mise en place du pare-feu et de la sécurité du serveur
 - Documentation du déploiement final
+
