@@ -4,4 +4,4 @@ def test_accueil():
     client = app.test_client()
     response = client.get("/")
     assert response.status_code == 200
-    assert "TEXTE_QUI_NEXISTE_PAS" in response.get_data(as_text=True)
+    assert "Bonjour" in response.get_data(as_text=True)
