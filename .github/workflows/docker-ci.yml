@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
@@ -14,13 +14,19 @@ jobs:
       - name: Construire l'image Docker
         run: docker build -t nouveau-projet-serveur .
 
-      - name: Installer Python et les dépendances
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Installer les dépendances
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt --break-system-packages
 
       - name: Lancer les tests
         run: pytest test_app.py -v
+
+      - name: Configurer la clé SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 2222 localhost >> ~/.ssh/known_hosts
+
+      - name: Déployer l'application
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 deploy@localhost "cd ~/nouveau-projet-serveur && git pull && docker compose up -d --build"
